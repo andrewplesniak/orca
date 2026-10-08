@@ -49,4 +49,11 @@ describe('dedupeRovoLegacySessionCopies', () => {
 
     expect(dedupeRovoLegacySessionCopies([other, current])).toEqual([other, current])
   })
+
+  it('only treats the .rovodev/sessions root as legacy', () => {
+    const current = rovo('/Users/ada/.rovo/sessions/abc/metadata.json')
+    const notLegacy = rovo('/mnt/.rovodev/custom/abc/metadata.json')
+
+    expect(dedupeRovoLegacySessionCopies([current, notLegacy])).toEqual([current, notLegacy])
+  })
 })

@@ -8,7 +8,10 @@ function pathSegments(filePath: string): string[] {
 }
 
 function isLegacyRovoPath(filePath: string): boolean {
-  return pathSegments(filePath).includes('.rovodev')
+  const segments = pathSegments(filePath)
+  return segments.some(
+    (segment, index) => segment === '.rovodev' && segments[index + 1] === 'sessions'
+  )
 }
 
 // Session identity is the `<id>` directory holding metadata.json, scoped per execution host.

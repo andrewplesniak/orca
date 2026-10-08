@@ -137,11 +137,17 @@ export function prepareLoadedProfileSettings(
     markNeedsSave()
   }
   const migratedDisabledTuiAgents = normalizeDisabledTuiAgents(parsed.settings?.disabledTuiAgents)
-  const migratedAgentYoloDefaults = migrateAgentYoloDefaults(parsed.settings)
   const retiredCmdOverrides = migrateRetiredAgentCmdOverrides(parsed.settings)
   if (retiredCmdOverrides.changed) {
     markNeedsSave()
   }
+  // Why: a retired override counts as customised and would block Rovo's yolo default.
+  const migratedAgentYoloDefaults = migrateAgentYoloDefaults(
+    parsed.settings && {
+      ...parsed.settings,
+      agentCmdOverrides: retiredCmdOverrides.agentCmdOverrides ?? {}
+    }
+  )
   if (
     parsed.settings?.agentYoloDefaultsMigrated !== true ||
     parsed.settings?.agentDefaultArgs?.devin !==
